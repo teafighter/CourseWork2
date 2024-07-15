@@ -16,7 +16,7 @@ public class ExamController {
     }
 
     @GetMapping(path = "/{amount}")
-    public Collection<Question> getQuestions(@PathVariable("amount") @RequestParam(name = "amount") int amount) {
+    public Collection<Question> getQuestions(@PathVariable("amount") int amount) {
         return examinerService.getQuestions(amount);
     }
 }

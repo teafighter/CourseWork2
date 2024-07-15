@@ -4,20 +4,16 @@ import org.springframework.stereotype.Service;
 import pro.sky.java.coursework2.domain.Question;
 import pro.sky.java.coursework2.service.QuestionService;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class JavaQuestionService implements QuestionService {
-    private Set<Question> questions = new HashSet<>();
+    private final Set<Question> questions = new HashSet<>();
+    private final Random random = new Random();
 
     @Override
     public Question add(String question, String answer) {
-        Question questionToAdd = new Question(question, answer);
-        questions.add(questionToAdd);
-        return questionToAdd;
+        return add(new Question(question, answer));
     }
 
     @Override
@@ -39,21 +35,7 @@ public class JavaQuestionService implements QuestionService {
 
     @Override
     public Question getRandomQuestion() {
-        Random random = new Random();
-        Question questionToReturn = null;
-        int randomIndex = random.nextInt(getQuestionsCollectionSize());
-        int i = 0;
-        for (Question question : questions) {
-            if (i == randomIndex) {
-                questionToReturn =  question;
-            }
-            i++;
-        }
-        return questionToReturn;
-    }
-
-    @Override
-    public int getQuestionsCollectionSize() {
-        return questions.size();
+        int randomIndex = random.nextInt(questions.size());
+        return new ArrayList<>(questions).get(randomIndex);
     }
 }

@@ -14,17 +14,17 @@ import java.util.Set;
 public class ExaminerServiceImpl implements ExaminerService {
     private final QuestionService questionService;
 
-    private final Set<Question> examQuestions = new HashSet<>();
-
     public ExaminerServiceImpl(QuestionService questionService) {
         this.questionService = questionService;
     }
 
     @Override
     public Collection<Question> getQuestions(int amount) {
-        if (amount > questionService.getQuestionsCollectionSize()) {
-            throw new NotEnoughQuestionsException();
+        if (amount < 0 ) throw new RuntimeException("Количество вопросов не может быть отрицательным");
+        if (amount > questionService.getAll().size()) {
+            throw new NotEnoughQuestionsException("Недостаточно вопросов в базе");
         }
+        Set<Question> examQuestions = new HashSet<>();
         while (examQuestions.size() < amount) {
             examQuestions.add(questionService.getRandomQuestion());
         }

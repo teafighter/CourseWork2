@@ -8,82 +8,88 @@ import pro.sky.java.coursework2.service.impl.JavaQuestionService;
 public class JavaQuestionsServiceTest {
     private final QuestionService questionService = new JavaQuestionService();
 
-
-    public void init() { // вспомогательный метод для создания тестовой коллекции вопросов
-        // не используется аннотация @BeforeEach, так как не во всех тестах нужна непустая коллекция
-        Question question1 = questionService.add("Какой самый строгий модификатор доступа в Java?", "private");
-        Question question2 = questionService.add("Сколько бит занимает в памяти переменная типа long?", "64");
-        Question question3 = new Question("Какой принцип ООП предназначен для управления доступом к данным извне?", "Инкапсуляция");
-        questionService.add(question3);
-        Question question4 = questionService.add("Question?", "Answer");
-    }
-
     @Test // тестирование добавления вопроса из строк
     public void shouldAddQuestionFromStrings() {
         // given
         Question expectedQuestion = new Question("Question?", "Answer");
-        init();
+        Assertions.assertFalse(questionService.getAll().contains(expectedQuestion));
         // when
         Question actualQuestion = questionService.add("Question?", "Answer");
         // then
         Assertions.assertEquals(expectedQuestion, actualQuestion);
+        Assertions.assertTrue(questionService.getAll().contains(expectedQuestion));
     }
 
     @Test // тестирование добавления вопроса как объекта
     public void shouldAddQuestionAsObject() {
         // given
         Question expectedQuestion = new Question("Question?", "Answer");
-        init();
+        Assertions.assertFalse(questionService.getAll().contains(expectedQuestion));
         // when
         Question actualQuestion = questionService.add(expectedQuestion);
         // then
         Assertions.assertEquals(expectedQuestion, actualQuestion);
+        Assertions.assertTrue(questionService.getAll().contains(expectedQuestion));
     }
 
     @Test // тестирование удаления вопроса как объекта
     public void shouldRemoveQuestionAsObject() {
         // given
-        init();
         Question expectedQuestion = new Question("Question?", "Answer");
+        questionService.add(expectedQuestion);
+        Assertions.assertTrue(questionService.getAll().contains(expectedQuestion));
         // when
         Question actualQuestion = questionService.remove(expectedQuestion);
         // then
         Assertions.assertEquals(expectedQuestion, actualQuestion);
+        Assertions.assertFalse(questionService.getAll().contains(expectedQuestion));
     }
 
     @Test // тестирование удаления вопроса и уменьшение общего количества вопросов
     public void shouldRemoveQuestionAndDecreaseNumberOfQuestions() {
         // given
-        init();
         Question questionToRemove = new Question("Question?", "Answer");
-        int expectedAmountOfQuestions = 3;
+        questionService.add(questionToRemove);
+        Assertions.assertTrue(questionService.getAll().contains(questionToRemove));
+        int expectedAmountOfQuestions = 0;
         // when
         questionService.remove(questionToRemove);
-        int actualAmountOfQuestions = questionService.getQuestionsCollectionSize();
+        int actualAmountOfQuestions = questionService.getAll().size();
         // then
         Assertions.assertEquals(expectedAmountOfQuestions, actualAmountOfQuestions);
+        Assertions.assertFalse(questionService.getAll().contains(questionToRemove));
     }
 
     @Test // тестирование возврата случайного вопроса
     public void shouldReturnRandomQuestion() {
         // given
-        questionService.add("Question?", "Answer");
-        Question expectedQuestion = new Question("Question?", "Answer");
+        questionService.add("Question1?", "Answer1");
+        questionService.add("Question2?", "Answer2");
+        questionService.add("Question3?", "Answer3");
         // when
         Question actualQuestion = questionService.getRandomQuestion();
+        // дальше посмотреть для себя, что вопросы действительно разные
+        System.out.println(questionService.getRandomQuestion());
+        System.out.println(questionService.getRandomQuestion());
+        System.out.println(questionService.getRandomQuestion());
         //then
-        Assertions.assertEquals(expectedQuestion, actualQuestion);
+        Assertions.assertTrue(questionService.getAll().contains(actualQuestion));
     }
 
     @Test // проверка размера коллекции
     public void shouldReturnCollectionSize() {
         // given
-        init();
-        int expectedSize = 4;
+        Question question1 = questionService.add("Question1?", "Answer1");
+        Question question2 = questionService.add("Question2?", "Answer2");
+        Question question3 = questionService.add("Question3?", "Answer3");
+        int expectedSize = 3;
         // when
-        int actualSize = questionService.getQuestionsCollectionSize();
+        int actualSize = questionService.getAll().size();
         //then
         Assertions.assertEquals(expectedSize, actualSize);
+        Assertions.assertTrue(questionService.getAll().contains(question1));
+        Assertions.assertTrue(questionService.getAll().contains(question2));
+        Assertions.assertTrue(questionService.getAll().contains(question3));
 
     }
 }
