@@ -20,7 +20,9 @@ public class ExaminerServiceImpl implements ExaminerService {
 
     @Override
     public Collection<Question> getQuestions(int amount) {
-        if (amount < 0 ) throw new RuntimeException("Количество вопросов не может быть отрицательным");
+        if (amount < 0 ) {
+            throw new RuntimeException("Количество вопросов не может быть отрицательным");
+        }
         if (amount > questionService.getAll().size()) {
             throw new NotEnoughQuestionsException("Недостаточно вопросов в базе");
         }
